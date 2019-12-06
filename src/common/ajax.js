@@ -88,7 +88,7 @@ axios.interceptors.response.use(response => {
 
 export default {
     //get请求
-    get(url, param) {
+    get(url, param, header={}) {
         return new Promise((resolve, reject) => {
             axios({
                 method: 'get',
@@ -96,10 +96,14 @@ export default {
                 params: {
                     ...param,
                 },
-                headers: {},
+                headers: {
+                    ...header,
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
                 cancelToken: new CancelToken(c => {
                     cancel = c;
-                })
+                }),
             }).then(res => {
                 resolve(res.data);
             }).catch(error => {
@@ -109,7 +113,7 @@ export default {
         });
     },
     //post请求
-    post(url, param) {
+    post(url, param, header={}) {
         return new Promise((resolve, reject) => {
             axios({
                 method: 'post',
@@ -117,7 +121,9 @@ export default {
                 data: {
                     ...param,
                 },
-                headers: {},
+                headers: {
+                    ...header,
+                },
                 cancelToken: new CancelToken(c => {
                     cancel = c;
                 })
@@ -130,7 +136,7 @@ export default {
         });
     },
     // put
-    put(url, param) {
+    put(url, param, header={}) {
         return new Promise((resolve, reject) => {
             axios({
                 method: 'put',
@@ -138,7 +144,9 @@ export default {
                 data: {
                     ...param,
                 },
-                headers: {},
+                headers: {
+                    ...header,
+                },
                 cancelToken: new CancelToken(c => {
                     cancel = c;
                 })
@@ -151,7 +159,7 @@ export default {
         });
     },
     // delete
-    del(url, param) {
+    del(url, param, header={}) {
         return new Promise((resolve, reject) => {
             axios({
                 method: 'delete',
@@ -159,7 +167,9 @@ export default {
                 data: {
                     ...param,
                 },
-                headers: {},
+                headers: {
+                    ...header,
+                },
                 cancelToken: new CancelToken(c => {
                     cancel = c;
                 })

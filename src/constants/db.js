@@ -1,4 +1,4 @@
 const DB_NAME = {
-    dbTest: 'dbTest',
+    platform: 'platform',
 };
 export default DB_NAME;

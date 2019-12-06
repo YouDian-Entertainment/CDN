@@ -144,7 +144,7 @@ const renderConfig = {
             '@node': path.resolve(__dirname, '../src/node.js'),
             '@electron': path.resolve(__dirname, '../src/electron.js'),
         },
-        extensions: ['*', '.less', '.css', '.js', '.vue']
+        extensions: ['*', '.less', '.css', '.js', '.vue', '.json']
     },
     optimization: {
         splitChunks: {

@@ -56,12 +56,14 @@ export default {
     background-color: @white;
     .m-b(@gap);
     .flex-column-center();
-    height: 100px;
+    height: 130px;
     width: 100px;
     position: relative;
     cursor: pointer;
     .platform-logo {
         width: 50px;
+        height: 50px;
+        .m-v(@gap-sm);
     }
 }
 </style>

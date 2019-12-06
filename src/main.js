@@ -37,7 +37,7 @@ function createWindow() {
             devTools: true,
             scrollBounce: false,
             nodeIntegration: true,
-            // webSecurity: false,
+            webSecurity: false,
         },
         icon: logo,
     });
@@ -57,9 +57,9 @@ function createWindow() {
     // });
     // AddMenuList();
     // 添加数据库
-    // for (let key in DB_NAME) {
-    //     AddDataBase(DB_NAME[key]);
-    // }
+    for (let key in DB_NAME) {
+        AddDataBase(DB_NAME[key]);
+    }
 }
 
 app.dock && app.dock.setIcon(logo);
