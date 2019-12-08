@@ -1,5 +1,6 @@
 // electron 相关的原生方法封装
 import { app, Notification, globalShortcut, Menu, ipcMain } from 'electron';
+import { ELECTRON_MAIN_ENMU } from '@constants/electron';
 import path from 'path';
 import Datastore from 'nedb';
 
@@ -98,9 +99,25 @@ const AddDataBase = (name) => {
     });
 };
 
+/**
+ * 监听修改窗体大小
+ * @param {BrowerWindow} window window对象
+ */
+const AddResizeAction = (window) => {
+    ipcMain.on(ELECTRON_MAIN_ENMU.resizeKey, (event, type) => {
+        if (type === ELECTRON_MAIN_ENMU.resizeMini) {
+            window.setSize(500, 500);
+        }
+        if (type === ELECTRON_MAIN_ENMU.resizeMax) {
+            window.setSize(700, 900);
+        }
+    });
+};
+
 module.exports = {
     Notic,
     AddShortcuts,
     AddMenuList,
     AddDataBase,
+    AddResizeAction,
 };

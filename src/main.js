@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from 'electron' // eslint-disable-line
-import { Notic, AddShortcuts, AddMenuList, AddDataBase } from './electron';
+import { Notic, AddShortcuts, AddMenuList, AddDataBase, AddResizeAction } from './electron';
 import { FUNCTION_KEY, LETTER_KEY } from './constants/shortcuts';
 import DB_NAME from './constants/db';
 const { port, host } = require('../electron/config');
@@ -20,8 +20,8 @@ function createWindow() {
      */
     mainWindow = new BrowserWindow({
         title: 'VET',
-        height: 700,
-        width: 900,
+        height: 500,
+        width: 500,
         center: true, // 窗口默认居中
         resizable: false, // 不可修改窗口大小
         maximizable: false, // 不存在最大化
@@ -60,6 +60,8 @@ function createWindow() {
     for (let key in DB_NAME) {
         AddDataBase(DB_NAME[key]);
     }
+    // 增加动态修改窗体大小
+    AddResizeAction(mainWindow);
 }
 
 app.dock && app.dock.setIcon(logo);

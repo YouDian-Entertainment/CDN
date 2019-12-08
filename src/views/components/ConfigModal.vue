@@ -1,11 +1,11 @@
 <template>
     <Modal v-model="visiable" :title="`${platformName}配置`" :mask-closable="false" footer-hide @on-visible-change="changeVisiable">
         <Form ref="form" :model="formItem" :rules="formRule" :label-width="120">
-            <FormItem prop="ak" label="ACCESS_KEY">
-                <Input v-model="formItem.ak" placeholder="输入ACCESS_KEY"></Input>
+            <FormItem prop="ak" label="AccessKey">
+                <Input v-model="formItem.ak" placeholder="输入AccessKey"></Input>
             </FormItem>
-            <FormItem prop="sk" label="SECRET_KEY">
-                <Input v-model="formItem.sk" placeholder="输入SECRET_KEY"></Input>
+            <FormItem prop="sk" label="SecretKey">
+                <Input v-model="formItem.sk" placeholder="输入SecretKey"></Input>
             </FormItem>
             <FormItem>
                 <Button type="primary" @click="addConfig">添加配置</Button>
@@ -49,8 +49,8 @@ export default {
                 sk: '',
             },
             formRule: {
-                ak: [{ required: true, message: '必须输入ACCESS_KEY', trigger: 'blur' }],
-                sk: [{ required: true, message: '必须输入SECRET_KEY', trigger: 'blur' }],
+                ak: [{ required: true, message: '必须输入AccessKey', trigger: 'blur' }],
+                sk: [{ required: true, message: '必须输入SecretKey', trigger: 'blur' }],
             }
         };
     },
@@ -69,18 +69,15 @@ export default {
             const { type } = this.$props;
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
-                    // this.$Message.success('Success!');
                     const param = {
                         key: type,
-                        ak: valid.ak,
-                        sk: valid.sk,
+                        ak: this.formItem.ak,
+                        sk: this.formItem.sk,
                     };
                     const res = await addItem(DB_NAME.platform, param);
                     if (res) {
                         this.hide();
                     }
-                } else {
-                    this.$Message.error('Fail!');
                 }
             });
         },

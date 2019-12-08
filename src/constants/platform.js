@@ -9,26 +9,26 @@ const PLATFORM_LIST = [{
     name: '七牛云',
     logo: qiniuLogo,
     path: '/qiniuyun',
-// }, {
-//     key: 'aliyun',
-//     name: '阿里云',
-//     logo: aliyunLogo,
-//     path: '/aliyun',
-// }, {
-//     key: 'tencent',
-//     name: '腾讯云',
-//     logo: tencentLogo,
-//     path: '/tencentyun',
-// }, {
-//     key: 'qingyun',
-//     name: '青云',
-//     logo: qingyunLogo,
-//     path: '/qinyun',
-// }, {
-//     key: 'youpai',
-//     name: '又拍云',
-//     logo: youpaiLogo,
-//     path: '/youpaiyun',
+}, {
+    key: 'aliyun',
+    name: '阿里云',
+    logo: aliyunLogo,
+    path: '/aliyun',
+}, {
+    key: 'tencent',
+    name: '腾讯云',
+    logo: tencentLogo,
+    path: '/tencentyun',
+}, {
+    key: 'qingyun',
+    name: '青云',
+    logo: qingyunLogo,
+    path: '/qinyun',
+}, {
+    key: 'youpai',
+    name: '又拍云',
+    logo: youpaiLogo,
+    path: '/youpaiyun',
 }];
 
 export const PLATFORM_VALUE = {

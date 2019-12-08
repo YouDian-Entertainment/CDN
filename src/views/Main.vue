@@ -1,6 +1,6 @@
 <template>
     <div class="v-main">
-        <img class="welcome-img" src="../assets/welcome.svg" alt="">
+        <img class="welcome-img" @mousedown="(e) => e.preventDefault()" src="../assets/welcome.svg" alt="">
         <ScrollBar class="v-container">
             <Row class="platform-list">
                 <Col span="6" v-for="item in list" :key="item.key">
@@ -8,7 +8,7 @@
                 </Col>
             </Row>
         </ScrollBar>
-        <ConfigModal ref="configModal" :type="platformType" />
+        <ConfigModal ref="configModal" :type="platformType" @result="refreshConfigData" />
     </div>
 </template>
 
@@ -20,10 +20,13 @@ import PlatformItem from '@views/components/PlatformItem';
 import PLATFORM_LIST from '@constants/platform';
 
 import DB_NAME from '@constants/db';
-import { getAllItems } from '@common/db';
+import { getAllItems, delItem } from '@common/db';
+import { setWindowMini } from '@common/common';
 
+window.del = delItem;
 // test
 import { getQiniuToken, getQiniuBucket, getQiniuBucketList, getQiniuBucketDomain } from '@common/platfrom/qiniu';
+import logger from '../common/logger';
 
 export default {
     name: 'Main', // 主页
@@ -42,6 +45,8 @@ export default {
         };
     },
     async mounted() {
+        // 设置窗体大小
+        setWindowMini();
         // const token = getQiniuToken();
         // console.log('token', token);
         const res = await getQiniuBucket();
@@ -52,6 +57,7 @@ export default {
         console.log('获取的数据为：', list);
         await getQiniuBucketDomain(res[0]);
         this.configList = await getAllItems(DB_NAME.platform);
+        logger.success('获取到的数据为：', this.configList);
     },
     computed: {
         isConfig() {
@@ -66,6 +72,9 @@ export default {
             this.platformType = type;
             this.$refs.configModal.show();
         },
+        async refreshConfigData() {
+            this.configList = await getAllItems(DB_NAME.platform);
+        },
     },
 };
 </script>
@@ -78,14 +87,16 @@ export default {
     height: 100vh;
     .welcome-img {
         width: 300px;
-        .m-t(100px);
+        height: 140px;
+        .m-t(30px);
+        user-select: none;
     }
     .v-container {
-        height: 400px;
-        width: 50%;
+        height: 330px;
+        width: 95%;
     }
     .platform-list {
-        .m-t(50px);
+        .m-t(30px);
         .ivu-col {
             .flex-column-center();
             .m-b(@gap);
