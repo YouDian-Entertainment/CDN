@@ -2,9 +2,12 @@
 import qiniu from 'qiniu';
 import { get, post } from '@common/ajax';
 import { QINIU_URL } from '@constants/url';
+import logger from '@common/logger';
 
-qiniu.conf.ACCESS_KEY = '5jI9Vhnfz7SiVeyzvBH82E5sDqden9aieqZHEzd8';
-qiniu.conf.SECRET_KEY = 'F_RJfQCqEqs7TQ721AuzTNT0I6QtU497_03smNqO';
+// qiniu.conf.ACCESS_KEY = '5jI9Vhnfz7SiVeyzvBH82E5sDqden9aieqZHEzd8';
+// qiniu.conf.SECRET_KEY = 'F_RJfQCqEqs7TQ721AuzTNT0I6QtU497_03smNqO';
+qiniu.conf.ACCESS_KEY = '';
+qiniu.conf.SECRET_KEY = '';
 
 export const initQiniu = (ak, sk) => {
     qiniu.conf.ACCESS_KEY = ak;
@@ -12,11 +15,11 @@ export const initQiniu = (ak, sk) => {
     qiniu.conf.RPC_TIMEOUT = 180000;
 };
 
-export const getQiniuToken = () => {
+const getQiniuToken = () => {
     return new qiniu.auth.digest.Mac(qiniu.conf.ACCESS_KEY, qiniu.conf.SECRET_KEY);
 };
 
-export const getQiniuHeader = (url, param) => {
+const getQiniuHeader = (url, param) => {
     let _url = url;
     if (param) {
         let query = '';
@@ -31,32 +34,36 @@ export const getQiniuHeader = (url, param) => {
 };
 
 /**
- * 获取bucket列表
+ * 获取 bucket 列表
  * @param {String} token 七牛云使用的token
  */
 export const getQiniuBucket = async () => {
     const res = await get(QINIU_URL.buckets, {}, getQiniuHeader(QINIU_URL.buckets));
-    console.log('获取到的bucket列表为：', res);
+    logger.success('七牛 => 获取的 bucket 列表：', res);
     return res;
 };
 
+/**
+ * 获取 bucket 的 domain 列表
+ * @param {String} bucketName bucket 名字
+ */
 export const getQiniuBucketDomain = async (bucketName) => {
     const param = { tbl: bucketName };
     const res = await get(QINIU_URL.domains, param, getQiniuHeader(QINIU_URL.domains, param));
-    console.log(res);
+    logger.success('七牛 => 获取的 bucket domain 列表：', res);
     return res;
-    // let config = new qiniu.conf.Config();
-    // let bucketManager = new qiniu.rs.BucketManager(getQiniuToken(), config);
-    // let deadline = parseInt(Date.now() / 1000);
-    // console.log(bucketManager.privateDownloadUrl(QINIU_URL.domains, '', deadline));
-    // return bucketManager.privateDownloadUrl(QINIU_URL.domains, '', deadline);
 };
 
-export const getQiniuBucketList = (params) => {
+/**
+ * 通过过滤对象，获取 bucket 的内容
+ * @param {String} bucketName bucket 名字
+ * @param {Object} params 过滤参数对象
+ */
+export const getQiniuBucketContent = (bucketName, params) => {
     let config = new qiniu.conf.Config();
     let bucketManager = new qiniu.rs.BucketManager(getQiniuToken(), config);
     return new Promise((resolve, reject) => {
-        bucketManager.listPrefix(params.bucket, params, function (respErr, respBody, respInfo) {
+        bucketManager.listPrefix(bucketName, { bucket: bucketName, ...params }, function (respErr, respBody, respInfo) {
             if (respBody.error) {
                 reject({'error': respBody.error, 'status': respBody.status});
             }

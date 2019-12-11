@@ -72,6 +72,19 @@ export const delItem = (name, id) => {
     });
 };
 
+export const delItemByCondition = (name, condition) => {
+    ipcRenderer.send(`${name}-del-by-condition`, condition);
+    return new Promise((reslove, reject) => {
+        ipcRenderer.once(`${name}-del-by-condition-result`, (event, result) => {
+            if (result) {
+                reslove(result);
+            } else {
+                reject();
+            }
+        });
+    });
+};
+
 /**
  * 根据条件更新一条或者多条数据
  * @param {String} name 数据库名称

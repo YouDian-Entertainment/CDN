@@ -14,6 +14,7 @@
 
 <script>
 import { Row, Col } from 'view-design';
+import { mapState, mapActions } from 'vuex';
 import ScrollBar from '@components/ScrollBar';
 import ConfigModal from '@views/components/ConfigModal';
 import PlatformItem from '@views/components/PlatformItem';
@@ -41,7 +42,6 @@ export default {
         return {
             list: PLATFORM_LIST,
             platformType: '',
-            configList: [],
         };
     },
     async mounted() {
@@ -49,17 +49,21 @@ export default {
         setWindowMini();
         // const token = getQiniuToken();
         // console.log('token', token);
-        const res = await getQiniuBucket();
-        const list = await getQiniuBucketList({
-            bucket: res[0],
-            limit: 30,
-        });
-        console.log('获取的数据为：', list);
-        await getQiniuBucketDomain(res[0]);
-        this.configList = await getAllItems(DB_NAME.platform);
-        logger.success('获取到的数据为：', this.configList);
+        // const res = await getQiniuBucket();
+        // const list = await getQiniuBucketList({
+        //     bucket: res[1],
+        //     limit: 30,
+        // });
+        // console.log('获取的数据为：', list);
+        // await getQiniuBucketDomain(res[1]);
+        // logger.success('获取到的数据为：', this.configList);
+        await this.getPlatformConfigList();
+        console.log(this.configList);
     },
     computed: {
+        ...mapState({
+            configList: state => state.app.platformList,
+        }),
         isConfig() {
             return item => {
                 const arr = this.configList.filter(temp => temp.key === item.key);
@@ -68,6 +72,9 @@ export default {
         },
     },
     methods: {
+        ...mapActions([
+            'getPlatformConfigList',
+        ]),
         openConfig(type) {
             this.platformType = type;
             this.$refs.configModal.show();

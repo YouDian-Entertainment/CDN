@@ -73,6 +73,14 @@ const AddDataBase = (name) => {
             event.sender.send(`${name}-del-result`, true);
         });
     });
+    ipcMain.on(`${name}-del-by-condition`, (event, condition) => {
+        db.remove(condition, {}, (err, numRemoved) => {
+            if (err) {
+                event.sender.send(`${name}-del-by-condition-result`, false);
+            }
+            event.sender.send(`${name}-del-by-condition-result`, true);
+        });
+    });
     ipcMain.on(`${name}-update`, (event, condition, value) => {
         db.update(condition, { $set: value }, (err, newDoc) => {
             if (err) {
@@ -109,7 +117,7 @@ const AddResizeAction = (window) => {
             window.setSize(500, 500);
         }
         if (type === ELECTRON_MAIN_ENMU.resizeMax) {
-            window.setSize(700, 900);
+            window.setSize(900, 700);
         }
     });
 };
