@@ -6,8 +6,8 @@ import {
     GET_BUCKET_DOMAIN_LIST,
     GET_BUCKET_CONTENT,
 } from '@store/mutationType';
-import { TipSuccess } from '@common/tip';
-import { getBucketList, getBucketDomain, getBucketContent } from '@common/bucket';
+import { TipSuccess, TipError } from '@common/tip';
+import { getBucketList, getBucketDomain, getBucketContent, delBucketContentItem } from '@common/bucket';
 import logger from '@common/logger';
 
 const app = {
@@ -73,6 +73,16 @@ const app = {
             const contentList = await getBucketContent(bucketName, filters);
             logger.success('获取的content：', contentList);
             commit(GET_BUCKET_CONTENT, contentList);
+        },
+        // 删除 bucket 内容
+        delBucketContent: async ({ dispatch }, { bucketName, key }) => {
+            const flag = await delBucketContentItem(bucketName, key);
+            if (flag) {
+                TipSuccess('删除成功');
+                dispatch('getBucketContentData', { bucketName });
+            } else {
+                TipError('删除失败');
+            }
         },
     }
 };

@@ -70,7 +70,7 @@ export const fileSize = (number) => {
  * @param {Object} item 七牛数据对象
  */
 export const dealQiniuBucketItem = (item) => {
-    const { key, fsize, mimeType, putTime } = item;
+    const { key, fsize, mimeType, putTime, hash } = item;
     // fsize: 48977
     // hash: "FgdHXtyBbGT6Y_bPlRYtgUfbQ2eC"
     // key: "01dc17593fc245a8012193a3226762.png"
@@ -83,6 +83,8 @@ export const dealQiniuBucketItem = (item) => {
         isImage, // 是否是图片，用户直接展示缩略图
         fileExt: getFileType(key) || '无', // 文件后缀
         name: key, // 内容名称，用于列表显示
+        key,
+        hash,
         icon: isImage ? '' : fileIcon(key), // 除图片外，文件展示的图标
         size: fileSize(fsize), // 文件大小
         date: dayjs(putTime / 10000).format('YYYY-MM-DD HH:mm:ss'), // 文件最后更新时间

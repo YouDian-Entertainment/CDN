@@ -71,3 +71,21 @@ export const getQiniuBucketContent = (bucketName, params) => {
         });
     });
 };
+
+export const delQiniuContentItem = (bucketName, key) => {
+    let config = new qiniu.conf.Config();
+    let bucketManager = new qiniu.rs.BucketManager(getQiniuToken(), config);
+    console.log(bucketManager);
+    return new Promise((resolve, reject) => {
+        bucketManager.delete(bucketName, key, function(err, respBody, respInfo) {
+            if (err) {
+                console.log('删除失败', err);
+                reject(err);
+            } else {
+                console.log(respInfo.statusCode);
+                console.log(respBody);
+                resolve(true);
+            }
+        });
+    });
+};

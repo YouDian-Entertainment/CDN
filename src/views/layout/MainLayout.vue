@@ -19,7 +19,7 @@
                 </div>
             </Sider>
         </Layout>
-        <BucketContent :contentList="bucketContent" :domainList="bucketDomain" />
+        <BucketContent :contentList="bucketContent" :domainList="bucketDomain" :bucket="bucket" />
     </div>
 </template>
 
@@ -76,6 +76,11 @@ export default {
             return PLATFORM_VALUE[platform];
         },
     },
+    data() {
+        return {
+            bucket: '',
+        };
+    },
     created() {
         setWindowMax();
     },
@@ -87,18 +92,21 @@ export default {
         // 选中bucket
         async selectBucket(name) {
             logger.info('选中的bucket为：', name);
+            this.bucket = name;
             await this.getBucketContentData({
                 bucketName: name,
                 filters: {},
             });
             await this.getBucketDomainData(name);
         },
-        delAuth() {
+        async delAuth() {
             const { platform } = this.$props;
-            console.log(platform);
-            delItemByCondition(DB_NAME.platform, {
+            const flag = await delItemByCondition(DB_NAME.platform, {
                 key: platform,
             });
+            if (flag) {
+                this.$router.replace('/');
+            }
         },
         changePlatform() {
             this.$router.replace('/');

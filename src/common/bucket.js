@@ -1,6 +1,6 @@
 // 平台统一操作
 import { PLATFORM_KEY_MAP } from '@constants/platform';
-import { initQiniu, getQiniuBucket, getQiniuBucketDomain, getQiniuBucketContent } from '@common/platfrom/qiniu';
+import { initQiniu, getQiniuBucket, getQiniuBucketDomain, getQiniuBucketContent, delQiniuContentItem } from '@common/platfrom/qiniu';
 import logger from './logger';
 import { dealListData } from './utils';
 
@@ -73,4 +73,20 @@ export const getBucketContent = async (bucketName, filters) => {
         break;
     }
     return contentList;
+};
+
+export const delBucketContentItem = async (bucketName, key) => {
+    console.log(bucketName, key);
+    let result = false;
+    if (!bucketName || !key) {
+        return result;
+    }
+    switch (_platform) {
+    case PLATFORM_KEY_MAP.qiniu:
+        result = delQiniuContentItem(bucketName, key);
+        break;
+    default:
+        break;
+    }
+    return result;
 };

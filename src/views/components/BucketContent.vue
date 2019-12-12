@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import { Layout, Header, Content, Select, Option } from 'view-design';
 import ScrollBar from '@components/ScrollBar';
 import MouseRight from '@components/MouseRight';
@@ -64,6 +65,7 @@ export default {
                 return [];
             },
         },
+        bucket: String,
     },
     watch: {
         domainList(val) {
@@ -99,12 +101,19 @@ export default {
                 },
             }, {
                 text: '删除',
-                action: (val) => {
-                    TipWarning('你点击了警告菜单！');
-                    logger.warn(JSON.stringify(val));
+                action: async (val) => {
+                    const { bucket } = this.$props;
+                    if (bucket) {
+                        await this.delBucketContent({ bucketName: bucket, key: val.key });
+                    }
                 },
             }],
         };
+    },
+    methods: {
+        ...mapActions([
+            'delBucketContent',
+        ]),
     },
 };
 </script>
