@@ -36,6 +36,7 @@ const app = {
         GET_BUCKET_CONTENT: (state, bucketContent) => {
             Object.assign(state, {
                 bucketContent,
+                bucketDomain: [],
             });
         },
     },
@@ -64,6 +65,7 @@ const app = {
         // 获取bucket domain列表
         getBucketDomainData: async ({ commit }, bucketName) => {
             const domainList = await getBucketDomain(bucketName);
+            logger.success('获取的domain：', domainList);
             commit(GET_BUCKET_DOMAIN_LIST, domainList);
         },
         // 获取 bucket 内容数据

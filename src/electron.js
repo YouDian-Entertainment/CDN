@@ -115,8 +115,15 @@ const AddResizeAction = (window) => {
     ipcMain.on(ELECTRON_MAIN_ENMU.resizeKey, (event, type) => {
         if (type === ELECTRON_MAIN_ENMU.resizeMini) {
             window.setSize(500, 500);
+            // const position = window.getPosition();
+            // let [x, y] = position;
+            // window.setPosition(x + 200, y + 100, true);
+
         }
         if (type === ELECTRON_MAIN_ENMU.resizeMax) {
+            // const position = window.getPosition();
+            // let [x, y] = position;
+            // window.setPosition(x - 200, y - 100, true);
             window.setSize(900, 700);
         }
     });

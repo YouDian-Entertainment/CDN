@@ -2,6 +2,7 @@
 import { PLATFORM_KEY_MAP } from '@constants/platform';
 import { initQiniu, getQiniuBucket, getQiniuBucketDomain, getQiniuBucketContent } from '@common/platfrom/qiniu';
 import logger from './logger';
+import { dealListData } from './utils';
 
 let _platform = '';
 
@@ -59,12 +60,14 @@ export const getBucketDomain = async (bucketName) => {
  */
 export const getBucketContent = async (bucketName, filters) => {
     let contentList = [];
+    let list = [];
     if (!bucketName) {
         return contentList;
     }
     switch (_platform) {
     case PLATFORM_KEY_MAP.qiniu:
-        contentList = await getQiniuBucketContent(bucketName, filters);
+        list = await getQiniuBucketContent(bucketName, filters);
+        contentList = dealListData(list, PLATFORM_KEY_MAP.qiniu);
         break;
     default:
         break;

@@ -1,3 +1,6 @@
+import { PLATFORM_KEY_MAP } from '@constants/platform';
+import { dealQiniuBucketItem } from './file';
+
 const { readMarkdownFile } = require('@node');
 
 /**
@@ -13,4 +16,15 @@ export const loadMarkdownFile = (filename) => {
  * @param {Array} list 数据列表
  * @param {String} type 平台类型
  */
-export const dealListData = (list, type) => {};
+export const dealListData = (list, type) => {
+    let result = [];
+    switch (type) {
+    case PLATFORM_KEY_MAP.qiniu:
+        result = list.map(item => dealQiniuBucketItem(item));
+        break;
+
+    default:
+        break;
+    }
+    return result;
+};

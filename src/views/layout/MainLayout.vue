@@ -2,46 +2,41 @@
     <div class="v-main-layout">
         <Layout>
             <Sider class="left-silder">
-                <!-- <BucketList :list="bucketList" @clear="delAuth" /> -->
+                <div class="platform-logo">
+                    <img class="logo" :src="platformLogo" alt="platformName">
+                    <div class="name">{{platformName}}</div>
+                </div>
                 <ScrollBar class="main-scroll">
                     <Menu class="v-main-menu" theme="light" @on-select="selectBucket">
-                        <MenuGroup title="bucket">
-                            <MenuItem v-for="(item, i) in bucketList" :name="item" :key="`bucket_item_${i}`">
-                                <!-- <Icon :type="menu.icon" /> -->
-                                {{item}}
-                            </MenuItem>
+                        <MenuGroup title="存储空间列表">
+                            <MenuItem v-for="(item, i) in bucketList" :name="item" :key="`bucket_item_${i}`">{{item}}</MenuItem>
                         </MenuGroup>
                     </Menu>
                 </ScrollBar>
                 <div class="action-btn-list">
-                    <Button @click="changePlatform">切换平台</Button>
-                    <Button @click="delAuth">退出</Button>
+                    <Button @click="changePlatform" type="info">切换平台</Button>
+                    <Button @click="delAuth" type="error">退出</Button>
                 </div>
             </Sider>
         </Layout>
-        <BucketContent />
-        <!-- <Layout :style="{marginLeft: '200px'}">
-            <Content class="right-content">
-                <ScrollBar class="main-content-scrollbar">
-                    <slot></slot>
-                </ScrollBar>
-            </Content>
-        </Layout> -->
+        <BucketContent :contentList="bucketContent" :domainList="bucketDomain" />
     </div>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import { Sider, Layout, Content, Header, Menu, MenuGroup, MenuItem, Icon, Button} from 'view-design';
 import ScrollBar from '@components/ScrollBar';
-import MainMenu from './MainMenu';
-import BucketList from './BucketList';
+import MainMenu from '@views/layout/MainMenu';
+import BucketList from '@views/layout/BucketList';
 import BucketContent from '@views/components/BucketContent';
 
-import { setWindowMax } from '../../common/common';
-import { delItemByCondition } from '../../common/db';
-import DB_NAME from '../../constants/db';
-import logger from '../../common/logger';
-import { mapActions } from 'vuex';
+import { setWindowMax } from '@common/common';
+import { delItemByCondition } from '@common/db';
+import DB_NAME from '@constants/db';
+import logger from '@common/logger';
+import { PLATFORM_LOGO, PLATFORM_VALUE } from '@constants/platform';
+
 export default {
     name: 'MainLayout',
     components: {
@@ -67,11 +62,26 @@ export default {
             },
         },
     },
+    computed: {
+        ...mapState({
+            bucketContent: state => state.app.bucketContent,
+            bucketDomain: state => state.app.bucketDomain,
+        }),
+        platformLogo() {
+            const { platform } = this.$props;
+            return PLATFORM_LOGO[platform];
+        },
+        platformName() {
+            const { platform } = this.$props;
+            return PLATFORM_VALUE[platform];
+        },
+    },
     created() {
         setWindowMax();
     },
     methods: {
         ...mapActions([
+            'getBucketDomainData',
             'getBucketContentData',
         ]),
         // 选中bucket
@@ -81,6 +91,7 @@ export default {
                 bucketName: name,
                 filters: {},
             });
+            await this.getBucketDomainData(name);
         },
         delAuth() {
             const { platform } = this.$props;
@@ -90,23 +101,17 @@ export default {
             });
         },
         changePlatform() {
-            this.$router.back();
+            this.$router.replace('/');
         },
     },
 };
 </script>
 
 <style lang="less">
-@header-height: 40px;
+@footer-height: 100px;
 @content-height: 100vh;
+@logo-height: 140px;
 .v-main-layout {
-    .v-main-header {
-        height: @header-height;
-        .border-line(@border-color, 0, 0);
-    }
-    .v-main-content {
-        height: @content-height;
-    }
     .left-silder {
         height: @content-height;
         position: fixed;
@@ -114,6 +119,20 @@ export default {
         background-color: @white;
         user-select: none;
         -webkit-app-region: drag;
+        .platform-logo {
+            -webkit-app-region: drag;
+            width: 100%;
+            .flex-column-center();
+            height: @logo-height;
+            .logo {
+                height: 80px;
+                width: 80px;
+            }
+            .name {
+                .font-size-md();
+                .m-t(@gap);
+            }
+        }
         .ivu-menu-item-group-title {
             -webkit-app-region: drag;
         }
@@ -130,19 +149,19 @@ export default {
             z-index: 1;
         }
         .main-scroll {
-            .p-t(20px);
-            height: 80vh;
+            height: calc(@content-height - @footer-height - @logo-height);
             position: relative;
         }
         .v-main-menu {
             width: 100% !important;
         }
-    }
-    .right-content {
-        overflow: hidden;
-        height: @content-height;
-        .main-content-scrollbar {
-            height: @content-height;
+        .action-btn-list {
+            height: @footer-height;
+            .flex-column-center();
+            .ivu-btn {
+                width: 90%;
+                .m-t(@gap);
+            }
         }
     }
 }
