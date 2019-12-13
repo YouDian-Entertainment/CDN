@@ -9,7 +9,7 @@
                 <ScrollBar class="main-scroll">
                     <Menu class="v-main-menu" theme="light" @on-select="selectBucket">
                         <MenuGroup title="存储空间列表">
-                            <MenuItem v-for="(item, i) in bucketList" :name="item" :key="`bucket_item_${i}`">{{item}}</MenuItem>
+                            <MenuItem v-for="(item, i) in bucketList" :name="item.bucket" :key="`bucket_item_${i}`">{{item.bucket}}</MenuItem>
                         </MenuGroup>
                     </Menu>
                 </ScrollBar>
@@ -19,7 +19,7 @@
                 </div>
             </Sider>
         </Layout>
-        <BucketContent :contentList="bucketContent" :domainList="bucketDomain" :bucket="bucket" />
+        <BucketContent :contentList="bucketContent" :domainList="bucketDomain" :bucket="bucket" :loading="showSpin" />
     </div>
 </template>
 
@@ -27,7 +27,6 @@
 import { mapActions, mapState } from 'vuex';
 import { Sider, Layout, Content, Header, Menu, MenuGroup, MenuItem, Icon, Button} from 'view-design';
 import ScrollBar from '@components/ScrollBar';
-import MainMenu from '@views/layout/MainMenu';
 import BucketList from '@views/layout/BucketList';
 import BucketContent from '@views/components/BucketContent';
 
@@ -41,7 +40,6 @@ export default {
     name: 'MainLayout',
     components: {
         Sider,
-        MainMenu,
         Header,
         Layout,
         Content,
@@ -79,6 +77,7 @@ export default {
     data() {
         return {
             bucket: '',
+            showSpin: false,
         };
     },
     created() {
@@ -88,16 +87,23 @@ export default {
         ...mapActions([
             'getBucketDomainData',
             'getBucketContentData',
+            'clearPlatformInfo',
         ]),
         // 选中bucket
         async selectBucket(name) {
+            const { bucketList } = this.$props;
             logger.info('选中的bucket为：', name);
             this.bucket = name;
+            const param = bucketList.filter(item => item.bucket === name)[0];
+            this.showSpin = true;
+            logger.info('获取参数为', param);
             await this.getBucketContentData({
-                bucketName: name,
+                bucketParam: param,
                 filters: {},
             });
+            logger.info('获取结果为', this.bucketContent);
             await this.getBucketDomainData(name);
+            this.showSpin = false;
         },
         async delAuth() {
             const { platform } = this.$props;
@@ -110,6 +116,7 @@ export default {
         },
         changePlatform() {
             this.$router.replace('/');
+            this.clearPlatformInfo();
         },
     },
 };

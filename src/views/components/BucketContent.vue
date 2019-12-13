@@ -14,6 +14,7 @@
         </Header>
         <Content class="right-content">
             <ScrollBar class="main-content-scrollbar">
+                <Spin size="large" fix v-if="loading"></Spin>
                 <div class="content-list">
                     <template v-for="(item, index) in contentList" >
                         <MouseRight :mouseData="mouseData" :key="index" :mouseKey="item">
@@ -29,7 +30,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { Layout, Header, Content, Select, Option } from 'view-design';
+import { Layout, Header, Content, Select, Option, Spin } from 'view-design';
 import ScrollBar from '@components/ScrollBar';
 import MouseRight from '@components/MouseRight';
 import ContentItem from '@views/components/ContentItem';
@@ -51,6 +52,7 @@ export default {
         Select,
         Option,
         ContentDetail,
+        Spin,
     },
     props: {
         contentList: {
@@ -66,6 +68,7 @@ export default {
             },
         },
         bucket: String,
+        loading: Boolean,
     },
     watch: {
         domainList(val) {
@@ -78,7 +81,7 @@ export default {
         return {
             domain: '',
             protocol: 'http',
-            protocolList: ['http', 'https', 'ws', 'wss'],
+            protocolList: ['http', 'https'],
             detailInfo: {},
             mouseData: [{
                 text: '查看详情',

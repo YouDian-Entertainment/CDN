@@ -5,6 +5,7 @@ import {
     GET_BUCKET_LIST,
     GET_BUCKET_DOMAIN_LIST,
     GET_BUCKET_CONTENT,
+    CLEAR_PLATFORM_INFO,
 } from '@store/mutationType';
 import { TipSuccess, TipError } from '@common/tip';
 import { getBucketList, getBucketDomain, getBucketContent, delBucketContentItem } from '@common/bucket';
@@ -39,6 +40,13 @@ const app = {
                 bucketDomain: [],
             });
         },
+        CLEAR_PLATFORM_INFO: (state) => {
+            Object.assign(state, {
+                bucketList: [],
+                bucketDomain: [],
+                bucketContent: [],
+            });
+        },
     },
     actions: {
         // 获取平台配置信息
@@ -69,8 +77,8 @@ const app = {
             commit(GET_BUCKET_DOMAIN_LIST, domainList);
         },
         // 获取 bucket 内容数据
-        getBucketContentData: async ({ commit }, { bucketName, filters={} }) => {
-            const contentList = await getBucketContent(bucketName, filters);
+        getBucketContentData: async ({ commit }, { bucketParam, filters={} }) => {
+            const contentList = await getBucketContent(bucketParam, filters);
             logger.success('获取的content：', contentList);
             commit(GET_BUCKET_CONTENT, contentList);
         },
@@ -83,6 +91,9 @@ const app = {
             } else {
                 TipError('删除失败');
             }
+        },
+        clearPlatformInfo: ({ commit }) => {
+            commit(CLEAR_PLATFORM_INFO);
         },
     }
 };

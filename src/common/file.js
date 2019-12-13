@@ -81,6 +81,7 @@ export const dealQiniuBucketItem = (item) => {
     const isImage = fileIsImage(key, mimeType);
     return {
         isImage, // 是否是图片，用户直接展示缩略图
+        src: '',
         fileExt: getFileType(key) || '无', // 文件后缀
         name: key, // 内容名称，用于列表显示
         key,
@@ -88,5 +89,28 @@ export const dealQiniuBucketItem = (item) => {
         icon: isImage ? '' : fileIcon(key), // 除图片外，文件展示的图标
         size: fileSize(fsize), // 文件大小
         date: dayjs(putTime / 10000).format('YYYY-MM-DD HH:mm:ss'), // 文件最后更新时间
+    };
+};
+
+export const dealTencentBucketItem = (item) => {
+    const { Key, ETag, Size, LastModified, Url } = item;
+    // ETag: ""f582f7854d0a9d8eb2a55bc0beaf2221""
+    // Key: "测试文件类型/LICENSE"
+    // LastModified: "2019-12-13T06:07:48.000Z"
+    // Owner: {ID: "1251014204", DisplayName: "1251014204"}
+    // Size: "1064"
+    // StorageClass: "STANDARD"
+    const isImage = fileIsImage(Key);
+    console.log(item);
+    return {
+        isImage, // 是否是图片，用户直接展示缩略图
+        src: isImage ? Url : '',
+        fileExt: getFileType(Key) || '无', // 文件后缀
+        name: Key, // 内容名称，用于列表显示
+        key: Key,
+        // hash: `${ETag}`,
+        icon: isImage ? '' : fileIcon(Key), // 除图片外，文件展示的图标
+        size: fileSize(Size), // 文件大小
+        date: dayjs(LastModified).format('YYYY-MM-DD HH:mm:ss'), // 文件最后更新时间
     };
 };

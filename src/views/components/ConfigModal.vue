@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import { Modal, Form, FormItem, Button, Icon, Input } from 'view-design';
 import { PLATFORM_VALUE } from '@constants/platform';
 import { addItem } from '@common/db';
@@ -55,6 +56,9 @@ export default {
         };
     },
     methods: {
+        ...mapActions([
+            'getPlatformConfigList',
+        ]),
         show() {
             this.visiable = true;
         },
@@ -77,6 +81,7 @@ export default {
                     const res = await addItem(DB_NAME.platform, param);
                     if (res) {
                         this.hide();
+                        await this.getPlatformConfigList();
                     }
                 }
             });

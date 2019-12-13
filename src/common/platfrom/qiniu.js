@@ -4,8 +4,6 @@ import { get, post } from '@common/ajax';
 import { QINIU_URL } from '@constants/url';
 import logger from '@common/logger';
 
-// qiniu.conf.ACCESS_KEY = '5jI9Vhnfz7SiVeyzvBH82E5sDqden9aieqZHEzd8';
-// qiniu.conf.SECRET_KEY = 'F_RJfQCqEqs7TQ721AuzTNT0I6QtU497_03smNqO';
 qiniu.conf.ACCESS_KEY = '';
 qiniu.conf.SECRET_KEY = '';
 

@@ -32,27 +32,22 @@ const PLATFORM_LIST = [{
     key: PLATFORM_KEY_MAP.qiniu,
     name: PLATFORM_VALUE.qiniu,
     logo: PLATFORM_LOGO.qiniu,
-    path: '/qiniuyun',
 }, {
     key: PLATFORM_KEY_MAP.aliyun,
     name: PLATFORM_VALUE.aliyun,
     logo: PLATFORM_LOGO.aliyun,
-    path: '/aliyun',
 }, {
     key: PLATFORM_KEY_MAP.tencent,
     name: PLATFORM_VALUE.tencent,
     logo: PLATFORM_LOGO.tencent,
-    path: '/tencentyun',
 }, {
     key: PLATFORM_KEY_MAP.qingyun,
     name: PLATFORM_VALUE.qingyun,
     logo: PLATFORM_LOGO.qingyun,
-    path: '/qinyun',
 }, {
     key: PLATFORM_KEY_MAP.youpai,
     name: PLATFORM_VALUE.youpai,
     logo: PLATFORM_LOGO.youpai,
-    path: '/youpaiyun',
 }];
 
 

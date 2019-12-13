@@ -24,9 +24,8 @@ import DB_NAME from '@constants/db';
 import { getAllItems, delItem } from '@common/db';
 import { setWindowMini } from '@common/common';
 
-window.del = delItem;
 // test
-import { getQiniuToken, getQiniuBucket, getQiniuBucketList, getQiniuBucketDomain } from '@common/platfrom/qiniu';
+import { initTencent, getTencentBucket } from '@common/platfrom/tencent';
 import logger from '../common/logger';
 
 export default {
@@ -47,16 +46,6 @@ export default {
     async mounted() {
         // 设置窗体大小
         setWindowMini();
-        // const token = getQiniuToken();
-        // console.log('token', token);
-        // const res = await getQiniuBucket();
-        // const list = await getQiniuBucketList({
-        //     bucket: res[1],
-        //     limit: 30,
-        // });
-        // console.log('获取的数据为：', list);
-        // await getQiniuBucketDomain(res[1]);
-        // logger.success('获取到的数据为：', this.configList);
         await this.getPlatformConfigList();
         console.log(this.configList);
     },

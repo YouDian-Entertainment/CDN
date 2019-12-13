@@ -1,13 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { MenuRouter } from './menu';
 import Main from '@views/Main';
-import QiNiu from '@views/QiNiu';
+import Bucket from '@views/Bucket';
 
 Vue.use(Router);
 
 const router = new Router({
-    // mode: 'history',
     routes: [
         {
             path: '/',
@@ -15,11 +13,10 @@ const router = new Router({
             component: Main,
         },
         {
-            path: '/qiniuyun',
-            name: 'qiniuyun',
-            component: QiNiu,
+            path: '/bucket',
+            name: 'bucket',
+            component: Bucket,
         },
-        // ...MenuRouter,
     ],
 });
 

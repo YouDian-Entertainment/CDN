@@ -32,15 +32,15 @@ export default {
             default: false,
         }
     },
-    computed: {
-
-    },
     methods: {
         openOrConfig() {
             const { isConfig, info } = this.$props;
             // 判断是否是登录，登录跳转，没登录弹出登录弹框
             if (isConfig) this.$router.push({
-                path: info.path,
+                path: '/bucket',
+                query: {
+                    platform: info.key,
+                },
             });
             this.$emit('config', info.key);
         },

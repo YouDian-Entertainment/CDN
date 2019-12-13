@@ -1,6 +1,6 @@
 <template>
     <Card class="content-item">
-        <img class="img-item" v-if="info.isImage && imageSrc" :src="imageSrc" :alt="info.name">
+        <img class="img-item" v-if="(info.isImage && imageSrc) || info.src" :src="info.src || imageSrc" :alt="info.name">
         <img v-else class="item-icon" :src="info.icon" :alt="info.name">
         <div class="item-name">{{info.name}}</div>
     </Card>

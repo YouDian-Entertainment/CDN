@@ -2,7 +2,8 @@
 import { PLATFORM_KEY_MAP } from '@constants/platform';
 import { initQiniu, getQiniuBucket, getQiniuBucketDomain, getQiniuBucketContent, delQiniuContentItem } from '@common/platfrom/qiniu';
 import logger from './logger';
-import { dealListData } from './utils';
+import { dealListData, dealBucketList } from './utils';
+import { initTencent, getTencentBucket, getTencentBucketContent, getTencentBucketDomain, getTencentImageUrl } from './platfrom/tencent';
 
 let _platform = '';
 
@@ -12,6 +13,10 @@ export const initConfig = (config, platform) => {
     case PLATFORM_KEY_MAP.qiniu:
         initQiniu(ak, sk);
         _platform = PLATFORM_KEY_MAP.qiniu;
+        break;
+    case PLATFORM_KEY_MAP.tencent:
+        initTencent(ak, sk);
+        _platform = PLATFORM_KEY_MAP.tencent;
         break;
     default:
         logger.error('配置出错， platform 参数不正确');
@@ -28,10 +33,13 @@ export const getBucketList = async () => {
     case PLATFORM_KEY_MAP.qiniu:
         result = await getQiniuBucket();
         break;
+    case PLATFORM_KEY_MAP.tencent:
+        result = await getTencentBucket();
+        break;
     default:
         break;
     }
-    return result;
+    return dealBucketList(result, _platform);
 };
 
 /**
@@ -47,6 +55,9 @@ export const getBucketDomain = async (bucketName) => {
     case PLATFORM_KEY_MAP.qiniu:
         result = await getQiniuBucketDomain(bucketName);
         break;
+    case PLATFORM_KEY_MAP.tencent:
+        result = [];
+        break;
     default:
         break;
     }
@@ -58,21 +69,28 @@ export const getBucketDomain = async (bucketName) => {
  * @param {String} bucketName bucket 名字
  * @param {Object} filters 过滤条件
  */
-export const getBucketContent = async (bucketName, filters) => {
-    let contentList = [];
+export const getBucketContent = async (bucketParam, filters) => {
     let list = [];
-    if (!bucketName) {
-        return contentList;
+    if (!bucketParam) {
+        return list;
     }
     switch (_platform) {
     case PLATFORM_KEY_MAP.qiniu:
-        list = await getQiniuBucketContent(bucketName, filters);
-        contentList = dealListData(list, PLATFORM_KEY_MAP.qiniu);
+        list = await getQiniuBucketContent(bucketParam.bucket, filters);
+        break;
+    case PLATFORM_KEY_MAP.tencent:
+        list = await getTencentBucketContent(bucketParam, filters);
+        list = list.map(item => {
+            return {
+                ...item,
+                Url: getTencentImageUrl(bucketParam, item.Key),
+            };
+        });
         break;
     default:
         break;
     }
-    return contentList;
+    return dealListData(list, _platform);
 };
 
 export const delBucketContentItem = async (bucketName, key) => {
