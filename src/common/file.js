@@ -82,6 +82,7 @@ export const dealQiniuBucketItem = (item) => {
     return {
         isImage, // 是否是图片，用户直接展示缩略图
         src: '',
+        url: '',
         fileExt: getFileType(key) || '无', // 文件后缀
         name: key, // 内容名称，用于列表显示
         key,
@@ -105,6 +106,7 @@ export const dealTencentBucketItem = (item) => {
     return {
         isImage, // 是否是图片，用户直接展示缩略图
         src: isImage ? Url : '',
+        url: Url,
         fileExt: getFileType(Key) || '无', // 文件后缀
         name: Key, // 内容名称，用于列表显示
         key: Key,

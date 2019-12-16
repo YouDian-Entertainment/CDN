@@ -77,17 +77,18 @@ const app = {
             commit(GET_BUCKET_DOMAIN_LIST, domainList);
         },
         // 获取 bucket 内容数据
-        getBucketContentData: async ({ commit }, { bucketParam, filters={} }) => {
+        getBucketContentData: async ({ commit, dispatch }, { bucketParam, filters={} }) => {
             const contentList = await getBucketContent(bucketParam, filters);
             logger.success('获取的content：', contentList);
             commit(GET_BUCKET_CONTENT, contentList);
+            dispatch('getBucketDomainData', bucketParam.bucket);
         },
         // 删除 bucket 内容
-        delBucketContent: async ({ dispatch }, { bucketName, key }) => {
-            const flag = await delBucketContentItem(bucketName, key);
+        delBucketContent: async ({ dispatch }, { bucketParam, key }) => {
+            const flag = await delBucketContentItem(bucketParam, key);
             if (flag) {
                 TipSuccess('删除成功');
-                dispatch('getBucketContentData', { bucketName });
+                dispatch('getBucketContentData', { bucketParam });
             } else {
                 TipError('删除失败');
             }

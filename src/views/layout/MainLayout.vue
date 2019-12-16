@@ -76,7 +76,7 @@ export default {
     },
     data() {
         return {
-            bucket: '',
+            bucket: {},
             showSpin: false,
         };
     },
@@ -93,16 +93,13 @@ export default {
         async selectBucket(name) {
             const { bucketList } = this.$props;
             logger.info('选中的bucket为：', name);
-            this.bucket = name;
             const param = bucketList.filter(item => item.bucket === name)[0];
+            this.bucket = param;
             this.showSpin = true;
-            logger.info('获取参数为', param);
             await this.getBucketContentData({
                 bucketParam: param,
                 filters: {},
             });
-            logger.info('获取结果为', this.bucketContent);
-            await this.getBucketDomainData(name);
             this.showSpin = false;
         },
         async delAuth() {

@@ -2,14 +2,16 @@
     <Layout class="bucket-content" :style="{marginLeft: '200px'}">
         <Header class="content-header">
             <div class="left-select-content">
-                <span class="label">域名:</span>
-                <Select v-model="domain" style="width:160px">
-                    <Option v-for="item in domainList" :value="item" :key="item">{{ item }}</Option>
-                </Select>
                 <span class="label">协议:</span>
                 <Select v-model="protocol" style="width:100px">
                     <Option v-for="item in protocolList" :value="item" :key="item">{{ item }}</Option>
                 </Select>
+                <template v-if="domainList.length > 0">
+                    <span class="label">域名:</span>
+                    <Select v-model="domain" style="width:160px">
+                        <Option v-for="item in domainList" :value="item" :key="item">{{ item }}</Option>
+                    </Select>
+                </template>
             </div>
         </Header>
         <Content class="right-content">
@@ -67,7 +69,12 @@ export default {
                 return [];
             },
         },
-        bucket: String,
+        bucket: {
+            type: Object,
+            default() {
+                return {};
+            },
+        },
         loading: Boolean,
     },
     watch: {
@@ -98,8 +105,9 @@ export default {
             }, {
                 text: '复制链接',
                 action: (val) => {
-                    const { name } = val;
-                    Copy(`${this.protocol}://${this.domain}/${name}`);
+                    const { name, url } = val;
+                    const copyVal = url ? url : `${this.protocol}://${this.domain}/${name}`;
+                    Copy(copyVal);
                     TipSuccess('链接复制成功');
                 },
             }, {
@@ -107,7 +115,7 @@ export default {
                 action: async (val) => {
                     const { bucket } = this.$props;
                     if (bucket) {
-                        await this.delBucketContent({ bucketName: bucket, key: val.key });
+                        await this.delBucketContent({ bucketParam: bucket, key: val.key });
                     }
                 },
             }],
